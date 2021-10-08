@@ -24,9 +24,12 @@ compatibility_date = "2021-10-08"
 
 2. Setup the secrets:
 
+ORIGIN_URL is the url to the website
+
 ```
 $ wrangler secret put DISCORD_WEBHOOK
 $ wrangler secret put NOCODEAPI_URL
+$ wrangler secret put ORIGIN_URL
 ```
 
 3.  Then, after installing [wrangler](https://developers.cloudflare.com/workers/get-started/) you should be able to execcute `wrangler dev` to launch the development server.
