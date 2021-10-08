@@ -281,7 +281,7 @@ addEventListener('fetch', (event) => {
   try {
     const request = event.request
     console.log(request)
-    if (request.headers.origin === `${ORIGIN_URL}`) {
+    if (request.headers.get('Origin') === `${ORIGIN_URL}`) {
       if (request.method.toUpperCase() === 'OPTIONS') {
         // Handle CORS preflight requests
         return event.respondWith(handleOptions(request))
