@@ -37,3 +37,8 @@ $ wrangler secret put ORIGIN_URL
 ## Publishing
 
 If you setup your `wrangler.toml` correctly, all that is required for publishing is executing `wrangler publish`
+
+## Credits
+
+- @alxfox for writing the discord embed logic
+- [cloudflare examples](https://developers.cloudflare.com/workers/examples/cors-header-proxy) for fixing the cors related problems
