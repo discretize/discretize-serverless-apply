@@ -71,9 +71,6 @@ async function sendDiscordEmbed(body) {
     requirements,
     powerBuilds,
     condiBuilds,
-    staticApply,
-    staticLogs,
-    staticAltars,
     soloLogs,
     soloTimes,
     soloFindMember,
@@ -128,35 +125,21 @@ async function sendDiscordEmbed(body) {
     inline: true,
   })
 
-  // distinction between fields depending on trial type (Solo vs Static)
-  if (staticApply === 'Solo') {
-    fields.push(
-      {
-        name: 'Logs',
-        value: soloLogs,
-      },
-      {
-        name: 'Playtimes',
-        value: soloTimes,
-      },
-      {
-        name: 'Who do you play with?',
-        value: soloFindMember.replace(/,/g, ', '),
-        inline: true,
-      },
-    )
-  } else {
-    fields.push(
-      {
-        name: 'Logs',
-        value: staticLogs,
-      },
-      {
-        name: 'Altar Strategy',
-        value: staticAltars,
-      },
-    )
-  }
+  fields.push(
+    {
+      name: 'Logs',
+      value: soloLogs,
+    },
+    {
+      name: 'Playtimes',
+      value: soloTimes,
+    },
+    {
+      name: 'Who do you play with?',
+      value: soloFindMember.replace(/,/g, ', '),
+      inline: true,
+    },
+  )
 
   fields.push(
     {
@@ -175,10 +158,7 @@ async function sendDiscordEmbed(body) {
       '<@&730372255758155837> <:dTpepedFeelsamazingman:549285673899786251>', // mention Trial Runner role
     embeds: [
       {
-        title:
-          'New Application! (' + staticApply === 'Solo'
-            ? 'Non-Static'
-            : 'Static' + ' Trial)',
+        title: 'New Application!',
         thumbnail: {
           // dT Logo (displayed top right of embed)
           url: 'https://cdn.discordapp.com/attachments/765177472836435979/831614589909205042/logo.png',
@@ -212,24 +192,6 @@ async function sendDiscordEmbed(body) {
 
 async function handlePostRequest(event) {
   const body = await readRequestBody(event.request)
-  let wasSuccessful = await insertIntoSheet(body)
-
-  if (!wasSuccessful) {
-    return new Response(
-      JSON.stringify(
-        { status: 'ERROR', message: 'Inserting the application failed.' },
-        null,
-        2,
-      ),
-      {
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-          ...corsHeaders,
-        },
-      },
-    )
-  }
-
   await sendDiscordEmbed(body)
 
   // When we came this far, nothing went fundamentally wrong. In the worst case the discord embed failed somehow, which is not a reason to tell the client the application failed
@@ -280,7 +242,6 @@ function handleOptions(request) {
 addEventListener('fetch', (event) => {
   try {
     const request = event.request
-    console.log(request)
     if (request.headers.get('Origin') === `${ORIGIN_URL}`) {
       if (request.method.toUpperCase() === 'OPTIONS') {
         // Handle CORS preflight requests
